@@ -161,6 +161,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Weights
+*.pkl
+
 # C extensions
 *.so
 
