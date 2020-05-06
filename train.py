@@ -22,6 +22,10 @@ from db.datasets import datasets
 torch.backends.cudnn.enabled   = True
 torch.backends.cudnn.benchmark = True
 
+# TODO: Burak Teke
+import warnings
+warnings.filterwarnings("ignore")
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Train CenterNet")
     parser.add_argument("cfg_file", help="config file", type=str)
