@@ -54,7 +54,7 @@ std::vector<at::Tensor> pool_backward(
     output_temp.copy_(grad_output_temp);
 
     auto un_max_ind = max_ind.unsqueeze(3);
-    auto gt_mask    = at::zeros({batch, channel, height}, torch::CUDA(at::kByte));
+    auto gt_mask    = at::zeros({batch, channel, height}, torch::CUDA(at::kBool));
     auto max_temp   = at::zeros({batch, channel, height}, torch::CUDA(at::kFloat));
     for (int32_t ind = 1; ind < width; ++ind) {
         input_temp = input.select(3, width - ind - 1);
