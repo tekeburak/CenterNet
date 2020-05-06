@@ -63,7 +63,7 @@ local libmaskapi = coco.libmaskapi
 
 MaskApi.encode = function( masks )
   local n, h, w = masks:size(1), masks:size(2), masks:size(3)
-  masks = masks:type('torch.ByteTensor'):transpose(2,3)
+  masks = masks:type('torch.BoolTensor'):transpose(2,3)
   local data = masks:contiguous():data()
   local Qs = MaskApi._rlesInit(n)
   libmaskapi.rleEncode(Qs[0],data,h,w,n)
@@ -72,7 +72,7 @@ end
 
 MaskApi.decode = function( Rs )
   local Qs, n, h, w = MaskApi._rlesFrLua(Rs)
-  local masks = torch.ByteTensor(n,w,h):zero():contiguous()
+  local masks = torch.BoolTensor(n,w,h):zero():contiguous()
   libmaskapi.rleDecode(Qs,masks:data(),n)
   MaskApi._rlesFree(Qs,n)
   return masks:transpose(2,3)
@@ -89,7 +89,7 @@ end
 
 MaskApi.iou = function( dt, gt, iscrowd )
   if not iscrowd then iscrowd = NULL else
-    iscrowd = iscrowd:type('torch.ByteTensor'):contiguous():data()
+    iscrowd = iscrowd:type('torch.BoolTensor'):contiguous():data()
   end
   if torch.isTensor(gt) and torch.isTensor(dt) then
     local nDt, k = dt:size(1), dt:size(2); assert(k==4)
@@ -195,7 +195,7 @@ MaskApi.drawMasks = function( img, masks, maxn, alpha, clrs )
   if not clrs then clrs=torch.rand(n,3)*.6+.4 end
   for i=1,math.min(maxn,n) do
     local M = masks[i]:contiguous():data()
-    local B = torch.ByteTensor(h,w):zero():contiguous():data()
+    local B = torch.BoolTensor(h,w):zero():contiguous():data()
     -- get boundaries B in masks M quickly
     for y=0,h-2 do for x=0,w-2 do
       local k=y*w+x
